@@ -22,6 +22,7 @@ runs:
   using: "composite"
   steps:
     - name: Get current task definition
+      shell: bash
       run: |
         aws ecs describe-task-definition --task-definition ${{ inputs.environment }}-${{ inputs.service }} --query taskDefinition > task-definition.json
 
