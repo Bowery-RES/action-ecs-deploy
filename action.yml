@@ -22,22 +22,22 @@ runs:
   using: "composite"
   steps:
     - name: Get current task definition
-        run: |
-          aws ecs describe-task-definition --task-definition  ${{ inputs.environment }}-${{ inputs.service }} --query taskDefinition > task-definition.json
+      run: |
+        aws ecs describe-task-definition --task-definition ${{ inputs.environment }}-${{ inputs.service }} --query taskDefinition > task-definition.json
 
     - name: Update task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          container-name: ${{ inputs.service }}
-          image:  ${{ inputs.image }}
-          environment-variables: ${{ inputs.variables }}
+      id: task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: task-definition.json
+        container-name: ${{ inputs.service }}
+        image:  ${{ inputs.image }}
+        environment-variables: ${{ inputs.variables }}
 
     - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ inputs.environment }}-${{ inputs.service }}-service
-          cluster: ${{ inputs.cluster }}
-          wait-for-service-stability: true
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: ${{ inputs.environment }}-${{ inputs.service }}-service
+        cluster: ${{ inputs.cluster }}
+        wait-for-service-stability: true
